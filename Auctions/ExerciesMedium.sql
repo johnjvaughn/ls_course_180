@@ -18,10 +18,10 @@ FROM bidders
 INNER JOIN bids ON bids.bidder_id = bidders.id;
 
 # 5
-SELECT name AS "Highest Bid Less Than 100 Dollars" 
-FROM items
-WHERE items.id != ANY
-(SELECT bids.item_id FROM bids WHERE bids.item_id = items.id AND bids.amount > 100);
+-- SELECT name AS "Highest Bid Less Than 100 Dollars" 
+-- FROM items
+-- WHERE items.id != ANY
+-- (SELECT bids.item_id FROM bids WHERE bids.item_id = items.id AND bids.amount > 100);
 
 SELECT name AS "Highest Bid Less Than 100 Dollars" 
 FROM items

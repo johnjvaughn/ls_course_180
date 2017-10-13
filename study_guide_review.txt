@@ -1,0 +1,66 @@
+Study Guide Review
+
+INNER JOIN: joins two tables only for rows that are actually connected via foreign key
+LEFT OUTER JOIN: joins two tables using at least one row for each row in the left (or first) table.
+  Each row of left table is returned even if it has no foreign key into the right table.
+  Rows in the right table only appear if they are referenced by the left table.
+RIGHT OUTER JOIN: same as LEFT OUTER JOIN, except reversed: there will be at least one result row
+  for each row in the right table, even if it has no connection to the left table.
+
+DCL Data Control Language:
+  Commands relating to access priviledges to data, such as GRANT and REVOKE
+DDL Data Definition Language:
+  Commands relating to the form or blueprint of the data, such as CREATE/DROP TABLE, ALTER TABLE, ADD CONSTRAINT
+DML Data Manulipulation Language:
+  Commands relating to CRUD functions on the data itself: INSERT/SELECT/UPDATE/DELETE
+
+Levels of Schema:
+  Conceptual:  highest, higher-level than SQL, focused on entities and their relationships
+               (ERD: entity relationship diagram or model), Crow's foot notation diagram
+  Logical:     general SQL with attributes & data types but not specific commands
+  Physical:    lowest level, specific SQL version commands, boxes that show table structures
+               Includes table and column names, data types, and primary & foreign keys with arrows to the key references.
+
+Cardinality: general number of objects on each side of a relationship: 
+             one-to-one, one-to-many, or many-to-many
+Modality:    relationship required or optional?  (1 = required, 0 = not)
+
+Examples:
+
+CREATE TABLE whatevers (
+  id serial PRIMARY KEY,
+  name text UNIQUE,
+  something_id integer NOT NULL REFERENCES somethings(id),
+  created_at timestamp NOT NULL DEFAULT NOW()
+);
+
+#or add foreign key later:
+ALTER TABLE whatevers ADD CONSTRAINT "whatevers_something_fkey_id" FOREIGN KEY (something_id) REFERENCES somethings(id);
+
+#add default value:
+ALTER TABLE whatevers ALTER COLUMN name SET DEFAULT 'Def Name';
+#remove it:
+ALTER TABLE whatevers ALTER COLUMN name DROP DEFAULT;
+
+#add a column:
+ALTER TABLE whatevers ADD COLUMN info varchar(255);
+
+#set column info UNIQUE:
+ALTER TABLE whatevers ADD CONSTRAINT "info_is_unique" UNIQUE (info);
+
+#create new join table:
+CREATE TABLE somethings_whatevers (
+  id serial PRIMARY KEY,
+  something_id int NOT NULL REFERENCES somethings(id),
+  whatever_id int NOT NULL REFERENCES whatevers(id) ON DELETE CASCADE
+);
+
+#add unique constraint over 2 foreign keys
+ALTER TABLE somethings_whatevers ADD CONSTRAINT "sw_unique_combo" UNIQUE(something_id, whatever_id);
+
+#add a check constraint:
+ALTER TABLE somethings ADD CHECK (LENGTH(name) >= 4);
+#or
+ALTER TABLE somethings ADD CONSTRAINT "name_of_constraint" CHECK (LENGTH(name) >= 4);
+#drop it:
+ALTER TABLE somethings DROP CONSTRAINT "name_of_constraint";
